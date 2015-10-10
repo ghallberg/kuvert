@@ -1,0 +1,9 @@
+{
+  "response" : {
+    "prefix" : "HELLO!"
+  },
+
+  "db" : {
+    "name" : "kuvert.db"
+  }
+}
