@@ -1,11 +1,18 @@
 import json
 import sqlite3
+import pugsql
 from collections import namedtuple
 from datetime import datetime, timedelta
 from bottle import route, run, request, response
 import bottle
 
-app = bottle.app()
+with open('config.json') as config_file:
+    config_data = json.load(config_file)
+
+DB_NAME = config_data['db']['name']
+
+queries = pugsql.module('queries/')
+queries.connect(f"sqlite:///{DB_NAME}")
 
 class EnableCors(object):
     name = 'enable_cors'
@@ -24,10 +31,6 @@ class EnableCors(object):
 
         return _enable_cors
 
-with open('config.json') as config_file:
-    config_data = json.load(config_file)
-
-DB_NAME = config_data['db']['name']
 
 MakeResult = namedtuple('MakeResult', 'success error id')
 ShowResult = namedtuple('ShowResult', 'success error content')
@@ -57,7 +60,7 @@ def kuvert_save():
 def list_open_kuvert():
     conn = sqlite3.connect(DB_NAME)
     cursor = conn.cursor()
-    cursor.execute('''SELECT content FROM kuverts''')
+    cursor.execute('''SELECT opening_date, content FROM kuvert WHERE opening_date <= date("now")''')
     res = [{"content": c} for c in cursor.fetchmany(100)]
     return { "success": True, "kuvert": res}
 
@@ -65,7 +68,7 @@ def get_kuvert( id ):
     try:
         conn = sqlite3.connect(DB_NAME)
         cursor = conn.cursor()
-        cursor.execute('''SELECT date, content FROM kuverts WHERE id = (?)''', (id))
+        cursor.execute('''SELECT opening_date, content FROM kuvert WHERE id = (?)''', (id))
         res = cursor.fetchone()
         conn.commit()
         return ShowResult(success=True, error=None, content=res[1])
@@ -78,13 +81,14 @@ def make_kuvert(content, opening_date = datetime.now() + timedelta(weeks=1)):
         conn = sqlite3.connect(DB_NAME)
         cursor = conn.cursor()
         cursor.execute(
-                '''INSERT INTO kuverts (content,opening_date) VALUES (?, ?)''',
+                '''INSERT INTO kuvert (content,opening_date) VALUES (?, ?)''',
                 (content, opening_date.isoformat()))
         conn.commit()
         return MakeResult(success=True, error=None, id=cursor.lastrowid)
     except IOError as e:
         return MakeResult(success=False, error="dunno", id=None)
 
-app.install(EnableCors())
 
+app = bottle.app()
+app.install(EnableCors())
 app.run(port=8080, debug=True, reloader=True)
