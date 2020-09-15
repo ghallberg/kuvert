@@ -16,7 +16,8 @@ def kuvert_save():
     result = kuvert.make_kuvert(
             data['title'],
             data['content'],
-            data['opening_date']
+            data['opening_date'],
+            data['owner']
     )
 
     if result.success:
