@@ -27,12 +27,12 @@ def get_kuvert(requested_id):
         return ShowResult(success=False, error="dunno", id=None)
 
 
-def make_kuvert(title, content, opening_date = datetime.now() + timedelta(weeks=1), owner = None):
+def make_kuvert(title, content, opening_date = datetime.now() + timedelta(weeks=1), tag = None):
     try:
         res = queries.store_kuvert(
                 content = content,
                 opening_date = opening_date,
-                owner = owner,
+                tag = tag,
                 title = title
         )
         return MakeResult(success=True, error=None)

@@ -17,7 +17,7 @@ def kuvert_save():
             data['title'],
             data['content'],
             data['opening_date'],
-            data['owner']
+            data['tag']
     )
 
     if result.success:
