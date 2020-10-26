@@ -11,12 +11,12 @@ DB_NAME = config_data['db']['name']
 queries = pugsql.module('queries/')
 queries.connect(f"sqlite:///{DB_NAME}")
 
-MakeResult = namedtuple('MakeResult', 'success error')
+MakeResult = namedtuple('MakeResult', 'success error id')
 ShowResult = namedtuple('ShowResult', 'success error content')
 OpenResult = namedtuple('OpenResult', 'success error kuvert')
 
 def get_open():
-    res = list(queries.fetch_open_kuvert())
+    res = list(queries.fetch_reecent_open_kuvert())
     return OpenResult(success=True, kuvert=res, error=None)
 
 def get_kuvert(requested_id):
@@ -35,7 +35,7 @@ def make_kuvert(title, content, opening_date = datetime.now() + timedelta(weeks=
                 tag = tag,
                 title = title
         )
-        return MakeResult(success=True, error=None)
+        return MakeResult(success=True, error=None, id=res)
     except IOError as e:
         return MakeResult(success=False, error="dunno", id=None)
 

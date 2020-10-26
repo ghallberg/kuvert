@@ -21,7 +21,7 @@ def kuvert_save():
     )
 
     if result.success:
-        return { "success": True }
+        return { "success": True, "id": result.id }
     else:
         return { "success": False, "error": result.error }
 

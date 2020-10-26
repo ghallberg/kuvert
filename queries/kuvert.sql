@@ -1,6 +1,9 @@
 -- :name fetch_open_kuvert :many
 SELECT * FROM kuvert WHERE opening_date <= date('now')
 
+-- :name fetch_reecent_open_kuvert :many
+SELECT * FROM kuvert WHERE opening_date <= date('now') ORDER BY opening_date DESC LIMIT 5
+
 -- :name fetch_kuvert_by_id :one
 SELECT * FROM kuvert WHERE id = :id AND opening_date <= date('now')
 
