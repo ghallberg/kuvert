@@ -1,2 +1,2 @@
 dev:
-	pipenv run python kuvert.py
+	pipenv run python server.py
