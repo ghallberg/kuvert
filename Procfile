@@ -1,3 +1,3 @@
 web: gunicorn kuvert:app
 
-release: alembic upgrade
+release: alembic upgrade head
