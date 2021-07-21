@@ -1,3 +1,1 @@
-web: make dev
-
-release: pipenv install
+web: pipenv exec gunicorn kuvert:app

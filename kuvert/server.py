@@ -35,7 +35,10 @@ def list_open_kuvert():
         return {"success": False, "error": res.error}
 
 
+
 if __name__ == "__main__":
     app = bottle.app()
     app.install(cors_plugin.EnableCors())
     app.run(port=8080, debug=True, reloader=True)
+
+app = bottle.default_app()

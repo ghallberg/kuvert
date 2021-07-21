@@ -1,5 +1,5 @@
 dev:
-	pipenv run python server.py
+	pipenv run python kuvert/server.py
 
 lint:
 	pipenv run black .
