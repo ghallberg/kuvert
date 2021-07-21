@@ -1,1 +1,1 @@
-web: pipenv exec gunicorn kuvert:app
+web: gunicorn kuvert:app
