@@ -10,11 +10,12 @@ pytest = "*"
 [packages]
 alembic = "*"
 pugsql = "*"
-bottle = "*"
 isort = "*"
-gunicorn = "*"
 python-dotenv = "*"
 psycopg2-binary = "*"
+fastapi = "*"
+uvicorn = "*"
+pydantic = "*"
 
 [requires]
 python_version = "3.8"

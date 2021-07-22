@@ -1,10 +1,36 @@
 import kuvert
-from bottle import route, run, request, response
-import bottle
+from datetime import date
+from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
+from typing import Optional
+from pydantic import BaseModel
 
+class Kuvert(BaseModel):
+    title: str
+    content: str
+    opening_date: date
+    tag: Optional[str] = None
 
-@route("/kuvert/<id>", method=["OPTIONS", "GET"])
-def kuvert_get(id):
+app = FastAPI()
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+@app.get("/kuvert/open")
+async def list_open_kuvert():
+    res = kuvert.get_open()
+    if res.success:
+        return {"success": True, "kuvert": res.kuvert}
+    else:
+        return {"success": False, "error": res.error}
+
+@app.get("/kuvert/{id}")
+async def kuvert_get(id: int):
     res = kuvert.get_kuvert(id)
     if res.success:
         return {"kuvert": res.content}
@@ -13,11 +39,10 @@ def kuvert_get(id):
         return {"error": res.content}
 
 
-@route("/kuvert", method=["OPTIONS", "POST"])
-def kuvert_save():
-    data = request.json
-    res= kuvert.make_kuvert(
-        data["title"], data["content"], data["opening_date"], data["tag"]
+@app.post("/kuvert")
+async def kuvert_save(kuvert_input: Kuvert):
+    res = kuvert.make_kuvert(
+        kuvert_input.title, kuvert_input.content, kuvert_input.opening_date, kuvert_input.tag
     )
 
     if res.success:
@@ -26,38 +51,3 @@ def kuvert_save():
         return {"success": False, "error": res.error}
 
 
-@route("/kuvert/open", method=["OPTIONS", "GET"])
-def list_open_kuvert():
-    res = kuvert.get_open()
-    if res.success:
-        return {"success": True, "kuvert": res.kuvert}
-    else:
-        return {"success": False, "error": res.error}
-
-
-class EnableCors(object):
-    name = "enable_cors"
-    api = 2
-
-    def apply(self, fn, context):
-        def _enable_cors(*args, **kwargs):
-            # set CORS headers
-            response.headers["Access-Control-Allow-Origin"] = "*"
-            response.headers["Access-Control-Allow-Methods"] = "GET, POST, PUT, OPTIONS"
-            response.headers[
-                "Access-Control-Allow-Headers"
-            ] = "Origin, Accept, Content-Type, X-Requested-With, X-CSRF-Token"
-
-            if bottle.request.method != "OPTIONS":
-                # actual request; reply with the actual response
-                return fn(*args, **kwargs)
-
-        return _enable_cors
-
-if __name__ == "__main__":
-    app = bottle.app()
-    app.install(EnableCors())
-    app.run(port=8080, debug=True, reloader=True)
-
-bottle.default_app().install(EnableCors())
-app = bottle.default_app()
