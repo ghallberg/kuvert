@@ -12,7 +12,7 @@ db_uri = os.getenv("DATABASE_URL")
 
 #WORKING AROUND HEROKU
 if db_uri.startswith("postgres://"):
-    db_uri = uri.replace("postgres://", "postgresql://", 1)
+    db_uri = db_uri.replace("postgres://", "postgresql://", 1)
 
 queries = pugsql.module("queries/")
 queries.connect(db_uri)
