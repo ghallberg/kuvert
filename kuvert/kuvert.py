@@ -1,15 +1,15 @@
 import json
 import pugsql
+import os
+
+from dotenv import load_dotenv
 from collections import namedtuple
 from datetime import datetime, timedelta
 
-with open("config.json") as config_file:
-    config_data = json.load(config_file)
-
-DB_NAME = config_data["db"]["name"]
+load_dotenv()
 
 queries = pugsql.module("queries/")
-queries.connect(f"sqlite:///{DB_NAME}")
+queries.connect(os.getenv("DATABASE_URL"))
 
 MakeResult = namedtuple("MakeResult", "success error id")
 ShowResult = namedtuple("ShowResult", "success error content")
