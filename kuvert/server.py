@@ -1,4 +1,4 @@
-from kuvert import cors_plugin, kuvert
+import kuvert
 from bottle import route, run, request, response
 import bottle
 
@@ -35,10 +35,29 @@ def list_open_kuvert():
         return {"success": False, "error": res.error}
 
 
+class EnableCors(object):
+    name = "enable_cors"
+    api = 2
+
+    def apply(self, fn, context):
+        def _enable_cors(*args, **kwargs):
+            # set CORS headers
+            response.headers["Access-Control-Allow-Origin"] = "*"
+            response.headers["Access-Control-Allow-Methods"] = "GET, POST, PUT, OPTIONS"
+            response.headers[
+                "Access-Control-Allow-Headers"
+            ] = "Origin, Accept, Content-Type, X-Requested-With, X-CSRF-Token"
+
+            if bottle.request.method != "OPTIONS":
+                # actual request; reply with the actual response
+                return fn(*args, **kwargs)
+
+        return _enable_cors
 
 if __name__ == "__main__":
     app = bottle.app()
-    app.install(cors_plugin.EnableCors())
+    app.install(EnableCors())
     app.run(port=8080, debug=True, reloader=True)
 
 app = bottle.default_app()
+app.install(EnableCors())
