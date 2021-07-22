@@ -8,8 +8,14 @@ from datetime import datetime, timedelta
 
 load_dotenv()
 
+db_uri = os.getenv("DATABASE_URL")
+
+#WORKING AROUND HEROKU
+if db_uri.startswith("postgres://"):
+    db_uri = uri.replace("postgres://", "postgresql://", 1)
+
 queries = pugsql.module("queries/")
-queries.connect(os.getenv("DATABASE_URL"))
+queries.connect(db_uri)
 
 MakeResult = namedtuple("MakeResult", "success error id")
 ShowResult = namedtuple("ShowResult", "success error content")

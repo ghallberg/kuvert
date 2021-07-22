@@ -28,6 +28,10 @@ target_metadata = None
 # my_important_option = config.get_main_option("my_important_option")
 # ... etc.
 
+db_uri = os.getenv('DATABASE_URL')
+
+if db_uri.startswith("postgres://"):
+    db_uri = db_uri.replace("postgres://", "postgresql://", 1)
 
 def run_migrations_offline():
     """Run migrations in 'offline' mode.
@@ -41,7 +45,7 @@ def run_migrations_offline():
     script output.
 
     """
-    url = os.getenv("DATABASE_URL")
+    url = db_uri
     context.configure(
         url=url,
         target_metadata=target_metadata,
@@ -61,7 +65,7 @@ def run_migrations_online():
 
     """
     connectable = engine_from_config(
-        {'sqlalchemy.url': os.getenv("DATABASE_URL")},
+        {'sqlalchemy.url': db_uri},
         prefix="sqlalchemy.",
         poolclass=pool.NullPool,
     )
