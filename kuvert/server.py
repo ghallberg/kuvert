@@ -59,5 +59,5 @@ if __name__ == "__main__":
     app.install(EnableCors())
     app.run(port=8080, debug=True, reloader=True)
 
+bottle.default_app().install(EnableCors())
 app = bottle.default_app()
-app.install(EnableCors())
