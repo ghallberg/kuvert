@@ -1,5 +1,6 @@
 dev:
-	pipenv run python kuvert/server.py
+	pipenv run uvicorn kuvert:app --reload
 
 lint:
 	pipenv run black .
+	pipenv run isort
