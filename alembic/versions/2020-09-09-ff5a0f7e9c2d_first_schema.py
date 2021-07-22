@@ -22,7 +22,9 @@ def upgrade():
         sa.Column("id", sa.Integer, primary_key=True),
         sa.Column("content", sa.Unicode, nullable=False),
         sa.Column("opening_date", sa.Date, nullable=False),
-        sa.Column("owner", sa.Unicode, nullable=True),
+        sa.Column("tag", sa.Unicode, nullable=True),
+        sa.Column("title", sa.Unicode, nullable=False),
+        sa.Column("created_at", sa.DateTime, nullable=False, server_default=sa.func.now()),
     )
 
 
