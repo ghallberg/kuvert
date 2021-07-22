@@ -35,8 +35,7 @@ async def kuvert_get(id: int):
     if res.success:
         return {"kuvert": res.content}
     else:
-        response.status = res.error
-        return {"error": res.content}
+        return {"error": res.error}
 
 
 @app.post("/kuvert")
