@@ -49,6 +49,7 @@ def make_kuvert(
         res = queries.store_kuvert(
             content=content, opening_date=opening_date, tag=tag, title=title
         )
+        print(f"RESULT: {res})
         return MakeResult(success=True, error=None, id=res)
     except IOError as e:
         return MakeResult(success=False, error="dunno", id=None)
