@@ -1,15 +1,19 @@
-import kuvert
 from datetime import date
+from typing import Optional
+
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from typing import Optional
 from pydantic import BaseModel
+
+import kuvert
+
 
 class Kuvert(BaseModel):
     title: str
     content: str
     opening_date: date
     tag: Optional[str] = None
+
 
 app = FastAPI()
 
@@ -21,6 +25,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+
 @app.get("/kuvert/open")
 async def list_open_kuvert():
     res = kuvert.get_open()
@@ -28,6 +33,7 @@ async def list_open_kuvert():
         return {"success": True, "kuvert": res.kuvert}
     else:
         return {"success": False, "error": res.error}
+
 
 @app.get("/kuvert/{id}")
 async def kuvert_get(id: int):
@@ -41,12 +47,13 @@ async def kuvert_get(id: int):
 @app.post("/kuvert")
 async def kuvert_save(kuvert_input: Kuvert):
     res = kuvert.make_kuvert(
-        kuvert_input.title, kuvert_input.content, kuvert_input.opening_date, kuvert_input.tag
+        kuvert_input.title,
+        kuvert_input.content,
+        kuvert_input.opening_date,
+        kuvert_input.tag,
     )
 
     if res.success:
         return {"success": True, "id": res.id}
     else:
         return {"success": False, "error": res.error}
-
-

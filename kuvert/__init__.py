@@ -1,2 +1,2 @@
+from kuvert.kuvert import get_kuvert, get_open, make_kuvert
 from kuvert.server import app
-from kuvert.kuvert import get_open, get_kuvert, make_kuvert

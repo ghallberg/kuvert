@@ -1,16 +1,16 @@
 import json
-import pugsql
 import os
-
-from dotenv import load_dotenv
 from collections import namedtuple
 from datetime import datetime, timedelta
+
+import pugsql
+from dotenv import load_dotenv
 
 load_dotenv()
 
 db_uri = os.getenv("DATABASE_URL")
 
-#WORKING AROUND HEROKU
+# WORKING AROUND HEROKU
 if db_uri.startswith("postgres://"):
     db_uri = db_uri.replace("postgres://", "postgresql://", 1)
 

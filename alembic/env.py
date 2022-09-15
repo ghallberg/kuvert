@@ -1,12 +1,11 @@
+import os
 from logging.config import fileConfig
 
-from sqlalchemy import engine_from_config
-from sqlalchemy import pool
+from dotenv import load_dotenv
+from sqlalchemy import engine_from_config, pool
 
 from alembic import context
 
-import os
-from dotenv import load_dotenv
 load_dotenv()
 
 # this is the Alembic Config object, which provides
@@ -28,10 +27,11 @@ target_metadata = None
 # my_important_option = config.get_main_option("my_important_option")
 # ... etc.
 
-db_uri = os.getenv('DATABASE_URL')
+db_uri = os.getenv("DATABASE_URL")
 
 if db_uri.startswith("postgres://"):
     db_uri = db_uri.replace("postgres://", "postgresql://", 1)
+
 
 def run_migrations_offline():
     """Run migrations in 'offline' mode.
@@ -65,7 +65,7 @@ def run_migrations_online():
 
     """
     connectable = engine_from_config(
-        {'sqlalchemy.url': db_uri},
+        {"sqlalchemy.url": db_uri},
         prefix="sqlalchemy.",
         poolclass=pool.NullPool,
     )
