@@ -24,6 +24,7 @@ OpenResult = namedtuple("OpenResult", "success error kuvert")
 
 def get_open():
     res = list(queries.fetch_recent_open_kuvert())
+    print(f"RESULT: {res}")
     return OpenResult(success=True, kuvert=res, error=None)
 
 
@@ -46,9 +47,14 @@ def make_kuvert(
     title, content, opening_date=datetime.now() + timedelta(weeks=1), tag=None
 ):
     try:
-        res = queries.store_kuvert(
-            content=content, opening_date=opening_date, tag=tag, title=title
-        )
+        if db_uri.startswith("post"):
+            res = queries.store_kuvert(
+                content=content, opening_date=opening_date, tag=tag, title=title
+            )
+        else:
+            res = queries.store_kuvert_dev(
+                content=content, opening_date=opening_date, tag=tag, title=title
+            )
         print(f"RESULT: {res}")
         return MakeResult(success=True, error=None, id=res)
     except IOError as e:

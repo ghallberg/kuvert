@@ -16,6 +16,9 @@ SELECT * FROM kuvert WHERE opening_date <= date('now') AND tag = :tag;
 -- :name store_kuvert :insert
 INSERT INTO kuvert (content, opening_date, tag, title) VALUES (:content, :opening_date, :tag, :title) RETURNING id;
 
+-- :name store_kuvert_dev :insert
+INSERT INTO kuvert (content, opening_date, tag, title) VALUES (:content, :opening_date, :tag, :title);
+
 -- :name fetch_all_kuvert :many
 SELECT * FROM kuvert;
 
